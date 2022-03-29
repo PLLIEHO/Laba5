@@ -15,16 +15,15 @@ import java.util.Scanner;
 import static com.company.core.Collection.humanQue;
 
 public class AddCore {
-    private static boolean updateFlag = false;
-    private static Long ID;
-    private static HumanBeing human;
-    private static boolean addIfMaxFlag = false;
-    private static String addIfMaxElement;
-    private static Core core;
-    private static ArrayList<HumanBeing> maxList = new ArrayList<>();
-    //private static int lineCounter = 0;
+    private boolean updateFlag = false;
+    private Long ID;
+    private HumanBeing human;
+    private boolean addIfMaxFlag = false;
+    private String addIfMaxElement;
+    private Core core;
+    private ArrayList<HumanBeing> maxList = new ArrayList<>();
 
-    public static void add() throws IOException {
+    public void add() throws IOException {
         maxList.clear();
         maxList.addAll(humanQue);
         human = new HumanBeing();
@@ -59,7 +58,7 @@ public class AddCore {
         humanQue.add(human);
     }
 
-    public static String addName() {
+    public String addName() {
         String name = InputCore.input();
         if (!name.equals("") && name != null) {
             return (name);
@@ -68,7 +67,7 @@ public class AddCore {
         }
     }
 
-    public static Mood mood() {
+    public Mood mood() {
         String moodType = InputCore.input().toLowerCase();
         if (moodType.equals("sadness")) {
             return (Mood.SADNESS);
@@ -82,12 +81,12 @@ public class AddCore {
             return (Mood.RAGE);
         } else {
             System.out.println("Данные не распознаны. Повторите ввод.");
-            weaponType();
+            mood();
             return (null);
         }
     }
 
-    public static WeaponType weaponType() {
+    public WeaponType weaponType() {
         String weapon = InputCore.input().toLowerCase();
         if (weapon.equals("axe")) {
             return (WeaponType.AXE);
@@ -104,7 +103,7 @@ public class AddCore {
         }
     }
 
-    public static boolean isRealHero() throws IOException {
+    public boolean isRealHero() throws IOException {
         String hero = InputCore.input().toUpperCase();
         if(!addIfMaxFlag || maxCheck("isrealhero", hero)) {
             if (hero.equals("ДА")) {
@@ -119,7 +118,7 @@ public class AddCore {
         return (false);
     }
 
-    public static float addCoordsX() {
+    public float addCoordsX() {
         String x = InputCore.input();
         try {
             Float floatX = Float.parseFloat(x);
@@ -138,7 +137,7 @@ public class AddCore {
         return (0);
     }
 
-    public static double addCoordsY() {
+    public double addCoordsY() {
         String y = InputCore.input();
         try {
             if(!addIfMaxFlag || maxCheck("coordinates_y", y)) {
@@ -152,7 +151,7 @@ public class AddCore {
         return (0);
     }
 
-    public static Boolean hasToothPick() throws IOException {
+    public Boolean hasToothPick() throws IOException {
         String toothPick = InputCore.input().toUpperCase();
         if(!addIfMaxFlag || maxCheck("hastoothpick", toothPick)) {
             if (toothPick.equals("ДА")) {
@@ -169,7 +168,7 @@ public class AddCore {
         return (false);
     }
 
-    public static Long impactSpeed() {
+    public Long impactSpeed() {
         String speed = InputCore.input();
         if (!speed.equals("")) {
             try {
@@ -192,15 +191,15 @@ public class AddCore {
         }
     }
 
-    public static void setID(Long id) {
-        AddCore.ID = id;
+    public void setID(Long id) {
+        this.ID = id;
     }
 
-    public static void setUpdateFlag(boolean flag) {
-        AddCore.updateFlag = flag;
+    public void setUpdateFlag(boolean flag) {
+        this.updateFlag = flag;
     }
 
-    public static void update(Long id, String element) throws IOException {
+    public void update(Long id, String element) throws IOException {
         for (HumanBeing humanBeing : humanQue) {
             if (humanBeing.getId() == id) {
                 switch (element) {
@@ -247,7 +246,7 @@ public class AddCore {
             }
         }
     }
-    public static boolean maxCheck(String element, String value) throws IOException {
+    public boolean maxCheck(String element, String value) throws IOException {
         float coordsMinX = -316;
         double coordsMinY = -100000000;
         boolean realHero = false;
@@ -358,15 +357,15 @@ public class AddCore {
         return (true);
         }
 
-    public static void setAddIfMaxFlag(boolean flag){
+    public void setAddIfMaxFlag(boolean flag){
         addIfMaxFlag = flag;
     }
 
-    public static void setAddIfMaxElement(String addIfMaxElement) {
-        AddCore.addIfMaxElement = addIfMaxElement;
+    public void setAddIfMaxElement(String addIfMaxElement) {
+        this.addIfMaxElement = addIfMaxElement;
     }
 
-    public static void setCore(Core newcore) {
+    public void setCore(Core newcore) {
         core = newcore;
     }
 }

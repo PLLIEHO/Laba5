@@ -1,21 +1,21 @@
 package com.company.core;
 
-public class CommandList {
-    public static String help = "help";
-    public static String info = "info";
-    public static String show = "show";
-    public static String add = "add";
-    public static String update = "update";
-    public static String remove_by_id = "remove_by_id";
-    public static String clear = "clear";
-    public static String save = "save";
-    public static String execute = "execute_script";
-    public static String exit = "exit";
-    public static String add_if_max = "add_if_max";
-    public static String remove_greater = "remove_greater";
-    public static String history = "history";
-    public static String max_by_real_hero = "max_by_real_hero";
-    public static String filter = "filter_contains_name";
-    public static String print_descending = "print_descending";
+public final class CommandList {
+    public static final String HELP = "help";
+    public static final String INFO = "info";
+    public static final String SHOW = "show";
+    public static final String ADD = "add";
+    public static final String UPDATE = "update";
+    public static final String REMOVE_BY_ID = "remove_by_id";
+    public static final String CLEAR = "clear";
+    public static final String SAVE = "save";
+    public static final String EXECUTE = "execute_script";
+    public static final String EXIT = "exit";
+    public static final String ADD_IF_MAX = "add_if_max";
+    public static final String REMOVE_GREATER = "remove_greater";
+    public static final String HISTORY = "history";
+    public static final String MAX_BY_REAL_HERO = "max_by_real_hero";
+    public static final String FILTER = "filter_contains_name";
+    public static final String PRINT_DESCENDING = "print_descending";
 
 }

@@ -3,9 +3,8 @@ package com.company.core;
 import com.company.data.HumanBeing;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -14,8 +13,8 @@ import static com.company.core.Collection.humanQue;
 
 public class Core {
     private String currentProgram;
-    Pattern pSpace = Pattern.compile(" ");
-    ArrayList<String> lastCommands = new ArrayList<>();
+    private Pattern pSpace = Pattern.compile(" ");
+    private List<String> lastCommands = new ArrayList<>();
     private String fileXML;
 
     public void history(String command){
@@ -30,30 +29,38 @@ public class Core {
         Scanner in = new Scanner(System.in);
         String filename = in.nextLine();
         File file = new File(filename);
-        if(file.canRead()) {
             try {
-                Parser.start(filename);
-                fileXML = filename;
+                //if(file.canRead()) {
+                    Parser parser = new Parser();
+                    parser.start(filename);
+                    fileXML = filename;
+                //} else {
+                //    System.out.println("Файл заблокирован для чтения.");
+                //    this.searchFile();
+                //}
             } catch (FileNotFoundException e) {
                 System.out.println("Имя файла не распознано. Пожалуйста, повторите ввод.");
                 this.searchFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            System.out.println("Файл заблокирован для чтения.");
-            System.exit(1);
+
         }
-    }
+
 
     public void script() throws IOException {
         System.out.println("Введите команду: ");
         currentProgram = InputCore.input();
-        lastCommands.add(currentProgram);
+        currentProgram = currentProgram.trim();
         String[] values = pSpace.split(currentProgram);
-        this.history(values[0]);
 
-        if(values[0].equals(CommandList.help)){
+//        switch (values) {
+//            case values[0].equals(CommandList.HELP):
+//                System.out.println("11");
+//                break;
+//        }
+
+        if(values[0].equals(CommandList.HELP)){
             System.out.println("help : вывести справку по доступным командам \n" +
             "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
             "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении \n" +
@@ -71,23 +78,28 @@ public class Core {
             "max_by_real_hero : вывести любой объект из коллекции, значение поля realHero которого является максимальным \n" +
             "filter_contains_name name : вывести элементы, значение поля name которых содержит заданную подстроку \n" +
             "print_descending : вывести элементы коллекции в порядке убывания");
+            history("help");
             script();
         }
-        else if(values[0].equals(CommandList.info)){
+        else if(values[0].equals(CommandList.INFO)){
             System.out.println("Тип коллекции: ArrayDeque \n" + "Текущий размер коллекции: " + humanQue.size() + "\n" + "Дата инициализации: " + Collection.getData().toString());
+            history("info");
             script();
         }
-        else if(values[0].equals(CommandList.show)){
+        else if(values[0].equals(CommandList.SHOW)){
             for(HumanBeing o : humanQue){
                 System.out.println(o.toString());
             }
+            history("show");
             script();
         }
-        else if(values[0].equals(CommandList.add)){
-            AddCore.add();
+        else if(values[0].equals(CommandList.ADD)){
+            AddCore addCore = new AddCore();
+            addCore.add();
+            history("add");
             script();
         }
-        else if(values[0].equals(CommandList.execute)) {
+        else if(values[0].equals(CommandList.EXECUTE)) {
             if (values.length > 1) {
                 try {
                     BufferedReader reader = new BufferedReader(new FileReader(values[1]));
@@ -97,6 +109,7 @@ public class Core {
                         InputCore.getScriptList().add(line);
                         InputCore.incScriptCounter();
                     }
+                    history("execute_script");
                     script();
                 } catch (FileNotFoundException e) {
                     System.out.println("Имя файла введено неверно. Пожалуйста, повторите ввод.");
@@ -107,12 +120,14 @@ public class Core {
                 script();
             }
         }
-        else if(values[0].equals(CommandList.update)) {
+        else if(values[0].equals(CommandList.UPDATE)) {
             if (values.length > 1) {
                 try {
                     Long ID = Long.parseLong(values[1]);
                     String element = values[2].toLowerCase();
-                    AddCore.update(ID, element);
+                    AddCore addCore = new AddCore();
+                    addCore.update(ID, element);
+                    history("update");
                     script();
                 } catch (NumberFormatException e) {
                     System.out.println("ID введён неверно. Пожалуйста, повторите ввод.");
@@ -123,7 +138,7 @@ public class Core {
                 script();
             }
         }
-        else if(values[0].equals(CommandList.remove_by_id)){
+        else if(values[0].equals(CommandList.REMOVE_BY_ID)){
             if(values.length>1) {
                 try {
                     Long ID = Long.parseLong(values[1]);
@@ -133,6 +148,7 @@ public class Core {
                             System.out.println("Объект с заданным ID успешно удалён.");
                         }
                     }
+                    history("remove_by_id");
                     script();
                 } catch (NumberFormatException e) {
                     System.out.println("ID введён неверно. Пожалуйста, повторите ввод.");
@@ -143,45 +159,61 @@ public class Core {
             script();
         }
         }
-        else if(values[0].equals(CommandList.clear)){
+        else if(values[0].equals(CommandList.CLEAR)){
             humanQue.clear();
             System.out.println("Коллекция успешно очищена.");
+            history("clear");
             script();
         }
-        else if(values[0].equals(CommandList.save)){
+        else if(values[0].equals(CommandList.SAVE)){
             OutputCore.save(fileXML);
+            history("save");
             script();
         }
-        else if(values[0].equals(CommandList.exit)){
+        else if(values[0].equals(CommandList.EXIT)){
             System.out.println("До скорой встречи!");
+            history("exit");
             System.exit(1);
         }
-        else if(values[0].equals(CommandList.add_if_max)){
+        else if(values[0].equals(CommandList.ADD_IF_MAX)){
             if(values.length>1) {
                 String element = values[1].toLowerCase();
-                AddCore.setAddIfMaxFlag(true);
-                AddCore.setCore(this);
-                AddCore.setAddIfMaxElement(element);
-                AddCore.add();
+                AddCore addCore = new AddCore();
+                addCore.setAddIfMaxFlag(true);
+                addCore.setCore(this);
+                history("add_if_max");
+                addCore.setAddIfMaxElement(element);
+                addCore.add();
             } else {
                 System.out.println("Вы не ввели аргумент.");
             }
             script();
         }
-        else if(values[0].equals(CommandList.max_by_real_hero)){
+        else if(values[0].equals(CommandList.MAX_BY_REAL_HERO)){
             Collection.maxByRealHero();
+            history("max_by_real_hero");
             script();
         }
-        else if(values[0].equals(CommandList.filter)){
+        else if(values[0].equals(CommandList.FILTER)){
             if(values.length>1) {
+                history("filter_name");
                 Collection.searchName(values[1]);
             } else {
             System.out.println("Вы не ввели аргумент.");
             }
             script();
         }
-        else if(values[0].equals(CommandList.print_descending)){
+        else if(values[0].equals(CommandList.PRINT_DESCENDING)){
             Collection.descendingSort();
+            history("print_descending");
+            script();
+        }
+        else if(values[0].equals(CommandList.HISTORY)){
+            System.out.println(lastCommands.toString());
+            history("history");
+            script();
+        } else {
+            System.out.println("Команда не распознана.");
             script();
         }
     }

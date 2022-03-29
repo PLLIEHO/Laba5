@@ -21,22 +21,23 @@ import java.util.regex.Pattern;
 import static com.company.core.Collection.humanQue;
 
 public class Parser {
-    private static Pattern XMLinfo = Pattern.compile("<\\?([\\s\\S]+?)\\?>");
-    private static Pattern basic = Pattern.compile("<([\\s\\S]+?)>");
-    private static Pattern value = Pattern.compile(">([\\s\\S]*?)<");
-    private static boolean infoFlag = true;
-    private static boolean coordFlag = false;
+    private Pattern XMLinfo = Pattern.compile("<\\?([\\s\\S]+?)\\?>");
+    private Pattern basic = Pattern.compile("<([\\s\\S]+?)>");
+    private Pattern value = Pattern.compile(">([\\s\\S]*?)<");
+    private boolean infoFlag = true;
+    private boolean coordFlag = false;
     private static String info;
-    private static int count = 0;
-    private static int carFlag = 0;
-    private static boolean idFlag = true;
-    private static Map<String, Boolean> checklist = new HashMap<>();
-    private static boolean sygnal;
-    private static boolean deleteFlag = false;
+    private int count = 0;
+    private int carFlag = 0;
+    private boolean idFlag = true;
+    private Map<String, Boolean> checklist = new HashMap<>();
+    private boolean sygnal;
+    private boolean deleteFlag = false;
+    private int counter;
 
-    public static void start(String fileName) throws IOException {
+    public void start(String fileName) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
-        if(lineCounter(fileName)>20) {
+        if(lineCounter(fileName)>2) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (!line.equals("<HeroList>")) {
@@ -48,7 +49,7 @@ public class Parser {
         }
         }
 
-       public static int lineCounter(String filename) throws IOException {
+       public int lineCounter(String filename) throws IOException {
            BufferedReader reader = new BufferedReader(new FileReader(filename));
            String lin;
            int counter = 0;
@@ -56,10 +57,12 @@ public class Parser {
                 counter += 1;
            }
            reader.close();
+           this.counter = counter;
            return counter;
        }
 
-    public static void execute(String line){
+    public void execute(String line){
+        count += 1;
         if(infoFlag) {
             info = line;
             System.out.println(info);
@@ -68,21 +71,19 @@ public class Parser {
         else{
             Matcher matcherA = basic.matcher(line);
             Matcher matcherB = value.matcher(line);
-            count += 1;
             if(matcherA.find()) {
                 String tag = matcherA.group().replace("<", "").replace(">", "");
-                if (idFlag&&!tag.equals("\\HeroList")) {
+                if (idFlag&&!tag.equals("/HeroList")&&count<counter-1) {
                     if (check()) {
                         HumanBeing human = new HumanBeing();
-                        //long id = Long.parseLong(tag);
-                        //human.setId(id);
                         Collection.addHuman(human);
                         sygnal = false;
                         idFlag = false;
                     }
                 }
-                    else if(sygnal&&!tag.equals("\\HeroList")&&!check()) {
+                    else if(sygnal&&!tag.equals("/HeroList")&&!check()) {
                         humanQue.removeLast();
+                        sygnal = false;
                         throw new FileErrorException("В файле ошибка. Проверьте целостность данных и количество аргументов.");
                     }
                  else {
@@ -108,7 +109,7 @@ public class Parser {
                                             Collection.getHuman().setName(name);
                                             checklist.put("name", true);
                                         } else {
-                                            throw new NoNameException("Имя не должно быть пустым!");
+                                            System.out.println("Имя не должно быть пустым! Объект не будет создан.");
                                         }
                                     }
                                 } else if (carFlag == 1&&checklist.get("carname")==null) {
@@ -128,10 +129,14 @@ public class Parser {
                             if(checklist.get("coordinates")) {
                                 if (matcherB.find()) {
                                     String x = matcherB.group().replace("<", "").replace(">", "");
-                                    float FloatX = Float.parseFloat(x);
-                                    if (FloatX > -316) {
-                                        Collection.getHuman().setCoordinatesX(FloatX);
-                                        checklist.put("x", true);
+                                    try {
+                                        float FloatX = Float.parseFloat(x);
+                                        if (FloatX > -316) {
+                                            Collection.getHuman().setCoordinatesX(FloatX);
+                                            checklist.put("x", true);
+                                        }
+                                    } catch (NumberFormatException e){
+                                        System.out.println("Координаты не читаются.");
                                     }
                                 }
                                 break;
@@ -141,14 +146,18 @@ public class Parser {
                             if(checklist.get("coordinates")) {
                                 if (matcherB.find()) {
                                     String y = matcherB.group().replace("<", "").replace(">", "");
-                                    double DoubleY = Double.parseDouble(y);
-                                    Collection.getHuman().setCoordinatesY(DoubleY);
-                                    checklist.put("y", true);
-                                }
+                                    try {
+                                        double DoubleY = Double.parseDouble(y);
+                                        Collection.getHuman().setCoordinatesY(DoubleY);
+                                        checklist.put("y", true);
+                                    } catch (NumberFormatException e){
+                                        System.out.println("Координаты не читаются.");
+                                    }
+                                    }
                                 break;
                             }
                             break;
-                        case "\\Coordinates":
+                        case "/Coordinates":
                             coordFlag = false;
                             break;
                         case "CreationDate":
@@ -156,7 +165,6 @@ public class Parser {
                                 if (matcherB.find()) {
                                     String date = matcherB.group().replace("<", "").replace(">", "");
                                     Date data = new Date(Long.parseLong(date));
-                                    //Date data = new Date(Long.valueOf(String date).longValue());
                                     Collection.getHuman().setCreationDate(data);
                                     checklist.put("creationdate", true);
                                 }
@@ -288,10 +296,10 @@ public class Parser {
                                 break;
                             }
                             break;
-                        case "\\Car":
+                        case "/Car":
                             carFlag = carFlag - 1;
                             break;
-                        case "\\HumanBeing":
+                        case "/HumanBeing":
                             sygnal = true;
                             idFlag = true;
                             break;
@@ -308,19 +316,14 @@ public class Parser {
     public static String getInfo(){
         return info;
     }
-    public static boolean check(){
+    public boolean check(){
         if(checklist.size()==14){
-            System.out.println(checklist.size());
-            System.out.println(checklist.toString());
             checklist.clear();
-            System.out.println(checklist.toString());
             return (true);
         } else if(checklist.size()==0){
-            System.out.println(checklist.size());
             return(true);
         }
         else if(checklist.size()<13){
-            System.out.println(1);
             checklist.clear();
             return (false);
         }

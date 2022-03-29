@@ -5,9 +5,10 @@ import com.company.data.HumanBeing;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 
 public class Collection {
-    static ArrayDeque<HumanBeing> humanQue = new ArrayDeque<HumanBeing>();
+    static Deque<HumanBeing> humanQue = new ArrayDeque<>();
     static Date data = new Date();
 
     public static void addHuman(HumanBeing human){

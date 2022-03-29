@@ -2,7 +2,7 @@ package com.company.data;
 
 import java.util.Date;
 
-public class HumanBeing {
+public class HumanBeing implements Comparable<HumanBeing>{
     private long id;
     private String name;
     private Coordinates coordinates = new Coordinates();
@@ -82,4 +82,8 @@ public class HumanBeing {
         return str;
     }
 
+    @Override
+    public int compareTo(HumanBeing o) {
+        return this.getName().compareTo(o.getName());
+    }
 }
