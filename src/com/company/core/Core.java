@@ -54,11 +54,6 @@ public class Core {
         currentProgram = currentProgram.trim();
         String[] values = pSpace.split(currentProgram);
 
-//        switch (values) {
-//            case values[0].equals(CommandList.HELP):
-//                System.out.println("11");
-//                break;
-//        }
 
         if(values[0].equals(CommandList.HELP)){
             System.out.println("help : вывести справку по доступным командам \n" +

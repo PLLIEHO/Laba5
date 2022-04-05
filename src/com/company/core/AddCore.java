@@ -295,66 +295,52 @@ public class AddCore {
             switch (element) {
                 case "coordinates_x":
                     if(coordsMinX>=Float.parseFloat(value)){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 case "coordinates_y":
                     if(coordsMinY>=Double.parseDouble(value)){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 case "realhero":
                     if(!realHero&&(element.equals("false"))){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else if (realHero){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 case "hastoothpick":
                     if(!hasToothpick&&element.equals("false")){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else if (hasToothpick){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else if (element.equals("")){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 case "impactspeed":
                     if(impactSpeed>Long.parseLong(element)){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 case "carcool":
                     if(!carCool&&(element.equals("false"))){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else if (carCool){
-                        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-                        addIfMaxFlag = false;
-                        core.script();
+                        this.addIfMaxFailure();
                     } else {return (true);}
                     break;
                 default:
                     return (true);
             }
         return (true);
+        }
+
+        public void addIfMaxFailure() throws IOException {
+            System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
+            addIfMaxFlag = false;
+            core.script();
         }
 
     public void setAddIfMaxFlag(boolean flag){

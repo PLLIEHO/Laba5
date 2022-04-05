@@ -20,11 +20,10 @@
     </HumanBeing>
     <HumanBeing>
         <ID>2</ID>
-        <Name>abob</Name>
+        <Name>abobus</Name>
         <Coordinates>
             <x>228.0</x>
             <y>1337.0</y>
-            <z>IsaevTop</z>>
         </Coordinates>
         <CreationDate>1647865418191</CreationDate>
         <RealHero>true</RealHero>
