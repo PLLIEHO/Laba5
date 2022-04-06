@@ -7,17 +7,38 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Deque;
 
+/**
+ * Класс отвечает за управление и хранение коллекции
+ */
 public class Collection {
     static Deque<HumanBeing> humanQue = new ArrayDeque<>();
     static Date data = new Date();
 
+    /**
+     *
+     * @param human новый объект класса HumanBeing
+     */
     public static void addHuman(HumanBeing human){
         humanQue.add(human);
     }
+
+    /**
+     *
+     * @return возвращает последний в очереди объект коллекции
+     */
     public static HumanBeing getHuman(){
         return humanQue.getLast();
     }
+
+    /**
+     *
+     * @return возвращает дату инициализации коллекции
+     */
     public static Date getData(){return data;}
+
+    /**
+     * Пишет в консоль первый попавшийся объект, у которого поле RealHero = true.
+     */
     public static void maxByRealHero(){
         for(HumanBeing humanBeing : humanQue){
             if(humanBeing.getRealHero()) {
@@ -26,6 +47,11 @@ public class Collection {
             }
         }
     }
+
+    /**
+     *
+     * @param value Подстрока, которая должна содержаться в имени
+     */
     public static void searchName(String value){
         for(HumanBeing humanBeing : humanQue){
             if(humanBeing.getName().contains(value)){
@@ -33,6 +59,10 @@ public class Collection {
             }
         }
     }
+
+    /**
+     * Производит сортировку
+     */
     public static void descendingSort(){
         ArrayList<HumanBeing> sortList = new ArrayList<>();
         sortList.addAll(humanQue);

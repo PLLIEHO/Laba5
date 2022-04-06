@@ -30,14 +30,14 @@ public class Core {
         String filename = in.nextLine();
         File file = new File(filename);
             try {
-                //if(file.canRead()) {
+                if(file.exists()&&file.canRead()) {
                     Parser parser = new Parser();
                     parser.start(filename);
                     fileXML = filename;
-                //} else {
-                //    System.out.println("Файл заблокирован для чтения.");
-                //    this.searchFile();
-                //}
+                } else {
+                    System.out.println("Файл заблокирован для чтения.");
+                    this.searchFile();
+                }
             } catch (FileNotFoundException e) {
                 System.out.println("Имя файла не распознано. Пожалуйста, повторите ввод.");
                 this.searchFile();
