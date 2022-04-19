@@ -1,35 +1,35 @@
 package com.company.core;
 
-public class TagList {
-    protected final static String herolist = "HeroList";
-    protected final static String herolistOver = "/HeroList";
-    protected final static String humanbeing = "HumanBeing";
-    protected final static String humanbeingOver = "/HumanBeing";
-    protected final static String id = "ID";
-    protected final static String idOver = "/ID";
-    protected final static String name = "Name";
-    protected final static String nameOver = "/Name";
-    protected final static String coordinates = "Coordinates";
-    protected final static String coordinatesOver = "/Coordinates";
-    protected final static String x = "x";
-    protected final static String xOver = "/x";
-    protected final static String y = "y";
-    protected final static String yOver = "/y";
-    protected final static String creationDate = "CreationDate";
-    protected final static String creationDateOver = "/CreationDate";
-    protected final static String realHero = "RealHero";
-    protected final static String realHeroOver = "/RealHero";
-    protected final static String hasToothpick = "HasToothpick";
-    protected final static String hasToothpickOver = "/HasToothpick";
-    protected final static String impactSpeed = "ImpactSpeed";
-    protected final static String impactSpeedOver = "/ImpactSpeed";
-    protected final static String weaponType = "WeaponType";
-    protected final static String weaponTypeOver = "/WeaponType";
-    protected final static String mood = "Mood";
-    protected final static String moodOver = "/Mood";
-    protected final static String car = "Car";
-    protected final static String carOver = "/Car";
-    protected final static String carCool = "Cool";
-    protected final static String carCoolOver = "/Cool";
+public final class TagList {
+    public final static String HEROLIST = "HeroList";
+    public final static String HEROLIST_OVER = "/HeroList";
+    public final static String HUMANBEING = "HumanBeing";
+    public final static String HUMANBEING_OVER = "/HumanBeing";
+    public final static String ID = "ID";
+    public final static String ID_OVER = "/ID";
+    public final static String NAME = "Name";
+    public final static String NAME_OVER = "/Name";
+    public final static String COORDINATES = "Coordinates";
+    public final static String COORDINATES_OVER = "/Coordinates";
+    public final static String X = "x";
+    public final static String X_OVER = "/x";
+    public final static String Y = "y";
+    public final static String Y_OVER = "/y";
+    public final static String CREATION_DATE = "CreationDate";
+    public final static String CREATION_DATE_OVER = "/CreationDate";
+    public final static String REAL_HERO = "RealHero";
+    public final static String REAL_HERO_OVER = "/RealHero";
+    public final static String HAS_TOOTHPICK = "HasToothpick";
+    public final static String HAS_TOOTHPICK_OVER = "/HasToothpick";
+    public final static String IMPACT_SPEED = "ImpactSpeed";
+    public final static String IMPACT_SPEED_OVER = "/ImpactSpeed";
+    public final static String WEAPON_TYPE = "WeaponType";
+    public final static String WEAPON_TYPE_OVER = "/WeaponType";
+    public final static String MOOD = "Mood";
+    public final static String MOOD_OVER = "/Mood";
+    public final static String CAR = "Car";
+    public final static String CAR_OVER = "/Car";
+    public final static String CAR_COOL = "Cool";
+    public final static String CAR_COOL_OVER = "/Cool";
 
 }

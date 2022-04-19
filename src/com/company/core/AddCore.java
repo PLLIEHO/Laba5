@@ -3,32 +3,31 @@ package com.company.core;
 import com.company.data.HumanBeing;
 import com.company.data.Mood;
 import com.company.data.WeaponType;
-import com.company.exceptions.NoNameException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.constant.Constable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.List;
 
-import static com.company.core.Collection.humanQue;
 
 public class AddCore {
-    private boolean updateFlag = false;
-    private Long ID;
-    private HumanBeing human;
     private boolean addIfMaxFlag = false;
     private String addIfMaxElement;
     private Core core;
-    private ArrayList<HumanBeing> maxList = new ArrayList<>();
+    private List<HumanBeing> maxList = new ArrayList<>();
+    private Collection collection;
+
+    public AddCore(Collection collection, Core core){
+        this.collection = collection;
+        this.core = core;
+    }
 
     public void add() throws IOException {
         maxList.clear();
-        maxList.addAll(humanQue);
-        human = new HumanBeing();
-        if (humanQue.size() > 0) {
-            human.setId(Collection.getHuman().getId() + 1);
+        maxList.addAll(collection.getCollection());
+        HumanBeing human = new HumanBeing();
+        if (collection.getCollection().size() > 0) {
+            human.setId(collection.getHuman().getId() + 1);
         } else {
             human.setId(1);
         }
@@ -55,57 +54,61 @@ public class AddCore {
         System.out.println("Машина крутая? (да/нет)");
         human.setCarCool(isRealHero());
         addIfMaxFlag = false;
-        humanQue.add(human);
+        collection.getCollection().add(human);
     }
 
     public String addName() {
         String name = InputCore.input();
-        if (!name.equals("") && name != null) {
+        if (!name.equals("")) {
             return (name);
         } else {
-            throw new NoNameException("Имя не должно быть пустым!");
+            System.out.println("Имя не должно быть пустым. Повторите ввод.");
+            this.addName();
+            return(null);
         }
     }
 
     public Mood mood() {
         String moodType = InputCore.input().toLowerCase();
-        if (moodType.equals("sadness")) {
-            return (Mood.SADNESS);
-        } else if (moodType.equals("gloom")) {
-            return (Mood.GLOOM);
-        } else if (moodType.equals("apathy")) {
-            return (Mood.APATHY);
-        } else if (moodType.equals("calm")) {
-            return (Mood.CALM);
-        } else if (moodType.equals("rage")) {
-            return (Mood.RAGE);
-        } else {
-            System.out.println("Данные не распознаны. Повторите ввод.");
-            mood();
-            return (null);
+        switch (moodType) {
+            case "sadness":
+                return (Mood.SADNESS);
+            case "gloom":
+                return (Mood.GLOOM);
+            case "apathy":
+                return (Mood.APATHY);
+            case "calm":
+                return (Mood.CALM);
+            case "rage":
+                return (Mood.RAGE);
+            default:
+                System.out.println("Данные не распознаны. Повторите ввод.");
+                mood();
+                return (null);
         }
     }
 
     public WeaponType weaponType() {
         String weapon = InputCore.input().toLowerCase();
-        if (weapon.equals("axe")) {
-            return (WeaponType.AXE);
-        } else if (weapon.equals("pistol")) {
-            return (WeaponType.PISTOL);
-        } else if (weapon.equals("shotgun")) {
-            return (WeaponType.SHOTGUN);
-        } else if (weapon.equals("rifle")) {
-            return (WeaponType.RIFLE);
-        } else {
-            System.out.println("Данные не распознаны. Повторите ввод.");
-            weaponType();
-            return (null);
+        switch (weapon) {
+            case "axe":
+                return (WeaponType.AXE);
+            case "pistol":
+                return (WeaponType.PISTOL);
+            case "shotgun":
+                return (WeaponType.SHOTGUN);
+            case "rifle":
+                return (WeaponType.RIFLE);
+            default:
+                System.out.println("Данные не распознаны. Повторите ввод.");
+                weaponType();
+                return (null);
         }
     }
 
     public boolean isRealHero() throws IOException {
         String hero = InputCore.input().toUpperCase();
-        if(!addIfMaxFlag || maxCheck("isrealhero", hero)) {
+        if (!addIfMaxFlag || maxCheck(REALHERO, hero)) {
             if (hero.equals("ДА")) {
                 return (true);
             } else if (hero.equals("НЕТ")) {
@@ -121,8 +124,8 @@ public class AddCore {
     public float addCoordsX() {
         String x = InputCore.input();
         try {
-            Float floatX = Float.parseFloat(x);
-            if(!addIfMaxFlag || maxCheck("coordinates_x", x)) {
+            float floatX = Float.parseFloat(x);
+            if (!addIfMaxFlag || maxCheck(COORDSX, x)) {
                 if (floatX > -316) {
                     return (floatX);
                 } else {
@@ -140,9 +143,8 @@ public class AddCore {
     public double addCoordsY() {
         String y = InputCore.input();
         try {
-            if(!addIfMaxFlag || maxCheck("coordinates_y", y)) {
-                Double doubleY = Double.parseDouble(y);
-                return (doubleY);
+            if (!addIfMaxFlag || maxCheck(COORDSY, y)) {
+                return (Double.parseDouble(y));
             }
         } catch (NumberFormatException | IOException e) {
             System.out.println("Введены неправильные данные. Повторите ввод.");
@@ -153,16 +155,18 @@ public class AddCore {
 
     public Boolean hasToothPick() throws IOException {
         String toothPick = InputCore.input().toUpperCase();
-        if(!addIfMaxFlag || maxCheck("hastoothpick", toothPick)) {
-            if (toothPick.equals("ДА")) {
-                return (true);
-            } else if (toothPick.equals("НЕТ")) {
-                return (false);
-            } else if (toothPick.equals("")) {
-                return (null);
-            } else {
-                System.out.println("Введены неправильные данные. Повторите ввод.");
-                hasToothPick();
+        if (!addIfMaxFlag || maxCheck(HASTOOTHPICK, toothPick)) {
+            switch (toothPick) {
+                case "ДА":
+                    return (true);
+                case "НЕТ":
+                    return (false);
+                case "":
+                    return (null);
+                default:
+                    System.out.println("Введены неправильные данные. Повторите ввод.");
+                    hasToothPick();
+                    break;
             }
         }
         return (false);
@@ -172,8 +176,8 @@ public class AddCore {
         String speed = InputCore.input();
         if (!speed.equals("")) {
             try {
-                if(!addIfMaxFlag || maxCheck("impactspeed", speed)) {
-                    Long longSpeed = Long.parseLong(speed);
+                if (!addIfMaxFlag || maxCheck(IMPACTSPEED, speed)) {
+                    long longSpeed = Long.parseLong(speed);
                     if (longSpeed > -902) {
                         return (longSpeed);
                     } else {
@@ -191,49 +195,41 @@ public class AddCore {
         }
     }
 
-    public void setID(Long id) {
-        this.ID = id;
-    }
-
-    public void setUpdateFlag(boolean flag) {
-        this.updateFlag = flag;
-    }
-
     public void update(Long id, String element) throws IOException {
-        for (HumanBeing humanBeing : humanQue) {
+        for (HumanBeing humanBeing : collection.getCollection()) {
             if (humanBeing.getId() == id) {
                 switch (element) {
-                    case "name":
+                    case NAME:
                         System.out.println("Введите новое имя: ");
                         humanBeing.setName(addName());
                         break;
-                    case "coordinates":
+                    case COORDS:
                         System.out.println("Введите новые координаты (X): ");
                         humanBeing.setCoordinatesX(addCoordsX());
                         System.out.println("Введите новые координаты (Y): ");
                         humanBeing.setCoordinatesY(addCoordsY());
                         break;
-                    case "realhero":
+                    case REALHERO:
                         System.out.println("Этот человек герой?: (да/нет)");
                         humanBeing.setRealHero(isRealHero());
                         break;
-                    case "hastoothpick":
+                    case HASTOOTHPICK:
                         System.out.println("У человека есть зубочистка?: (да/нет)");
                         humanBeing.setHasToothPick(hasToothPick());
                         break;
-                    case "impactspeed":
+                    case IMPACTSPEED:
                         System.out.println("Введите новую скорость воздействия: ");
                         humanBeing.setImpactSpeed(impactSpeed());
                         break;
-                    case "weapontype":
+                    case WEAPONTYPE:
                         System.out.println("Введите новый тип оружия: (AXE, PISTOL, SHOTGUN, RIFLE)");
                         humanBeing.setWeaponType(weaponType());
                         break;
-                    case "mood":
+                    case MOOD:
                         System.out.println("Введите новое настроение: (SADNESS, GLOOM, APATHY, CALM, RAGE)");
                         humanBeing.setMood(mood());
                         break;
-                    case "car":
+                    case CAR:
                         System.out.println("Введите новое название машины:");
                         humanBeing.setCarName(addName());
                         System.out.println("Машина-то крутая? (да/нет)");
@@ -246,6 +242,7 @@ public class AddCore {
             }
         }
     }
+
     public boolean maxCheck(String element, String value) throws IOException {
         float coordsMinX = -316;
         double coordsMinY = -100000000;
@@ -253,97 +250,116 @@ public class AddCore {
         Boolean hasToothpick = false;
         long impactSpeed = -100000000L;
         boolean carCool = false;
-        if(maxList.size()>0) {
+        if (maxList.size() > 0) {
             for (HumanBeing humanBeing : maxList) {
                 switch (addIfMaxElement) {
-                    case "coordinates_x":
+                    case COORDSX:
                         if (humanBeing.getCoordinatesX() > coordsMinX) {
                             coordsMinX = humanBeing.getCoordinatesX();
-                            break;
                         }
-                    case "coordinates_y":
+                        break;
+                    case COORDSY:
                         if (humanBeing.getCoordinatesY() > coordsMinY) {
                             coordsMinY = humanBeing.getCoordinatesY();
-                            break;
                         }
-                    case "realhero":
+                        break;
+                    case REALHERO:
                         if (humanBeing.getRealHero()) {
                             realHero = humanBeing.getRealHero();
-                            break;
                         }
-                    case "hastoothpick":
+                        break;
+                    case HASTOOTHPICK:
                         if (humanBeing.getHasToothPick()) {
                             hasToothpick = humanBeing.getHasToothPick();
-                            break;
                         }
-                    case "impactspeed":
+                        break;
+                    case IMPACTSPEED:
                         if (humanBeing.getImpactSpeed() > humanBeing.getImpactSpeed()) {
                             impactSpeed = humanBeing.getImpactSpeed();
-                            break;
                         }
-                    case "carcool":
+                        break;
+                    case CARCOOL:
                         if (humanBeing.getCarCool()) {
                             carCool = humanBeing.getCarCool();
-                            break;
                         }
+                        break;
                     default:
                         System.out.println("Вы ввели неправильный элемент.");
                         core.script();
                 }
             }
         }
-            switch (element) {
-                case "coordinates_x":
-                    if(coordsMinX>=Float.parseFloat(value)){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                case "coordinates_y":
-                    if(coordsMinY>=Double.parseDouble(value)){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                case "realhero":
-                    if(!realHero&&(element.equals("false"))){
-                        this.addIfMaxFailure();
-                    } else if (realHero){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                case "hastoothpick":
-                    if(!hasToothpick&&element.equals("false")){
-                        this.addIfMaxFailure();
-                    } else if (hasToothpick){
-                        this.addIfMaxFailure();
-                    } else if (element.equals("")){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                case "impactspeed":
-                    if(impactSpeed>Long.parseLong(element)){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                case "carcool":
-                    if(!carCool&&(element.equals("false"))){
-                        this.addIfMaxFailure();
-                    } else if (carCool){
-                        this.addIfMaxFailure();
-                    } else {return (true);}
-                    break;
-                default:
+        switch (element) {
+            case COORDSX:
+                if (coordsMinX >= Float.parseFloat(value)) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
                     return (true);
-            }
+                }
+                break;
+            case COORDSY:
+                if (coordsMinY >= Double.parseDouble(value)) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
+                    return (true);
+                }
+                break;
+            case REALHERO:
+                if (!realHero && value.equals("false")) {
+                    this.addIfMaxFailure();
+                } else if (realHero) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
+                    return (true);
+                }
+                break;
+            case HASTOOTHPICK:
+                if (!hasToothpick && value.equals("false")) {
+                    this.addIfMaxFailure();
+                } else if (hasToothpick) {
+                    this.addIfMaxFailure();
+                } else if (value.equals("")) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
+                    return (true);
+                }
+                break;
+            case IMPACTSPEED:
+                if (impactSpeed > Long.parseLong(element)) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
+                    return (true);
+                }
+                break;
+            case CARCOOL:
+                if (!carCool && value.equals("false")) {
+                    this.addIfMaxFailure();
+                } else if (carCool) {
+                    this.addIfMaxFailure();
+                } else {
+                    addIfMaxFlag = false;
+                    return (true);
+                }
+                break;
+            default:
+                addIfMaxFlag = false;
+                return (true);
+        }
         return (true);
-        }
+    }
 
-        public void addIfMaxFailure() throws IOException {
-            System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
-            addIfMaxFlag = false;
-            core.script();
-        }
+    public void addIfMaxFailure() throws IOException {
+        System.out.println("Данные, введенные ранее, не превышают значения максимального элемента. Новый элемент не будет добавлен.");
+        addIfMaxFlag = false;
+        core.script();
+    }
 
-    public void setAddIfMaxFlag(boolean flag){
+    public void setAddIfMaxFlag(boolean flag) {
         addIfMaxFlag = flag;
     }
 
@@ -354,5 +370,17 @@ public class AddCore {
     public void setCore(Core newcore) {
         core = newcore;
     }
+
+    private static final String NAME = "name";
+    private static final String COORDS = "coordinates";
+    private static final String REALHERO = "realhero";
+    private static final String HASTOOTHPICK = "hastoothpick";
+    private static final String IMPACTSPEED = "impactspeed";
+    private static final String WEAPONTYPE = "weapontype";
+    private static final String MOOD = "mood";
+    private static final String CAR = "car";
+    private static final String COORDSX = "coordinates_x";
+    private static final String COORDSY = "coordinates_y";
+    private static final String CARCOOL = "carcool";
 }
 

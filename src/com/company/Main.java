@@ -11,7 +11,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Core core = new Core();
+        Collection collection = new Collection();
+        Core core = new Core(collection);
         core.searchFile();
         core.script();
     }

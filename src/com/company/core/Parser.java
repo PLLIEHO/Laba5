@@ -4,44 +4,40 @@ import com.company.data.HumanBeing;
 import com.company.data.Mood;
 import com.company.data.WeaponType;
 import com.company.exceptions.FileErrorException;
-import com.company.exceptions.NoNameException;
 
-import javax.sound.midi.SysexMessage;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.company.core.Collection.humanQue;
 
 public class Parser {
     private Pattern XMLinfo = Pattern.compile("<\\?([\\s\\S]+?)\\?>");
     private Pattern basic = Pattern.compile("<([\\s\\S]+?)>");
     private Pattern value = Pattern.compile(">([\\s\\S]*?)<");
     private boolean infoFlag = true;
-    private boolean coordFlag = false;
     private static String info;
     private int count = 0;
     private int carFlag = 0;
     private boolean idFlag = true;
     private Map<String, Boolean> checklist = new HashMap<>();
     private boolean sygnal;
-    private boolean deleteFlag = false;
     private int counter;
-    TagList tags = new TagList();
+    private Collection collection;
+    public Parser(Collection collection){
+        this.collection = collection;
+    }
 
     public void start(String fileName) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
         if(lineCounter(fileName)>2) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.equals(TagList.herolist)) {
+                if (!line.equals(TagList.HEROLIST)) {
                     this.execute(line);
                 }
             }
@@ -74,103 +70,101 @@ public class Parser {
             Matcher matcherB = value.matcher(line);
             if(matcherA.find()) {
                 String tag = matcherA.group().replace("<", "").replace(">", "");
-                if (idFlag&&!tag.equals(TagList.herolistOver)&&count<counter-1) {
+                if (idFlag&&!tag.equals(TagList.HEROLIST_OVER)&&count<counter-1) {
                     if (check()) {
                         HumanBeing human = new HumanBeing();
-                        Collection.addHuman(human);
+                        collection.addHuman(human);
                         sygnal = false;
                         idFlag = false;
                     }
                 }
-                    else if(sygnal&&!tag.equals(TagList.herolistOver)&&!check()) {
-                        humanQue.removeLast();
+                    else if(sygnal&&!tag.equals(TagList.HEROLIST_OVER)&&!check()) {
+                        collection.getCollection().removeLast();
                         sygnal = false;
                         throw new FileErrorException("В файле ошибка. Проверьте целостность данных и количество аргументов.");
                     }
                  else {
                     switch (tag) {
-                        case TagList.id:
+                        case TagList.ID:
                             this.idParse(matcherB);
                             break;
-                        case TagList.name:
+                        case TagList.NAME:
                             this.nameParse(matcherB);
                             break;
-                        case TagList.coordinates:
+                        case TagList.COORDINATES:
                             if(checklist.get("coordinates") ==null) {
-                                coordFlag = true;
                                 checklist.put("coordinates", true);
                                 break;
                             }
                             break;
-                        case TagList.x:
+                        case TagList.X:
                             if(checklist.get("coordinates")) {
                                 this.coordinatesXParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.y:
+                        case TagList.Y:
                             if(checklist.get("coordinates")) {
                                 this.coordinatesYParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.coordinatesOver:
-                            coordFlag = false;
+                        case TagList.COORDINATES_OVER:
                             break;
-                        case TagList.creationDate:
+                        case TagList.CREATION_DATE:
                             if(checklist.get("creationdate")==null) {
                                 this.creationDateParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.realHero:
+                        case TagList.REAL_HERO:
                             if(checklist.get("realhero")==null) {
                                 this.realHeroParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.hasToothpick:
+                        case TagList.HAS_TOOTHPICK:
                             if(checklist.get("hastoothpick")==null) {
                                 this.hasToothpickParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.impactSpeed:
+                        case TagList.IMPACT_SPEED:
                             if(checklist.get("impactspeed")==null) {
                                 this.impactSpeedParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.weaponType:
+                        case TagList.WEAPON_TYPE:
                             if(checklist.get("weapontype")==null) {
                                 this.weaponTypeParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.mood:
+                        case TagList.MOOD:
                             if(checklist.get("mood")==null) {
                                 this.moodParse(matcherB);
                             break;
                             }
 
                             break;
-                        case TagList.car:
+                        case TagList.CAR:
                             if(checklist.get("car")==null) {
                                 carFlag = carFlag + 1;
                                 checklist.put("car", true);
                                 break;
                             }
                             break;
-                        case TagList.carCool:
+                        case TagList.CAR_COOL:
                             if(checklist.get("carcool")==null) {
                                 this.carCoolParse(matcherB);
                                 break;
                             }
                             break;
-                        case TagList.carOver:
+                        case TagList.CAR_OVER:
                             carFlag = carFlag - 1;
                             break;
-                        case TagList.humanbeingOver:
+                        case TagList.HUMANBEING_OVER:
                             sygnal = true;
                             idFlag = true;
                             break;
@@ -207,10 +201,9 @@ public class Parser {
             try {
                 long id = Long.parseLong(idString);
                 checklist.put("ID", true);
-                Collection.getHuman().setId(id);
+                collection.getHuman().setId(id);
             } catch (NumberFormatException e){
                 System.out.println("ID не читается!");
-                deleteFlag = true;
             }
         }
     }
@@ -220,15 +213,15 @@ public class Parser {
             String name = matcherB.group().replace("<", "").replace(">", "");
             if (carFlag == 0) {
                 if(checklist.get("name")==null) {
-                    if (!name.equals("") && name != null) {
-                        Collection.getHuman().setName(name);
+                    if (!name.equals("")) {
+                        collection.getHuman().setName(name);
                         checklist.put("name", true);
                     } else {
                         System.out.println("Имя не должно быть пустым! Объект не будет создан.");
                     }
                 }
             } else if (carFlag == 1&&checklist.get("carname")==null) {
-                Collection.getHuman().setCarName(name);
+                collection.getHuman().setCarName(name);
                 checklist.put("carname", true);
             }
         }
@@ -240,7 +233,7 @@ public class Parser {
             try {
                 float FloatX = Float.parseFloat(x);
                 if (FloatX > -316) {
-                    Collection.getHuman().setCoordinatesX(FloatX);
+                    collection.getHuman().setCoordinatesX(FloatX);
                     checklist.put("x", true);
                 }
             } catch (NumberFormatException e){
@@ -254,7 +247,7 @@ public class Parser {
             String y = matcherB.group().replace("<", "").replace(">", "");
             try {
                 double DoubleY = Double.parseDouble(y);
-                Collection.getHuman().setCoordinatesY(DoubleY);
+                collection.getHuman().setCoordinatesY(DoubleY);
                 checklist.put("y", true);
             } catch (NumberFormatException e){
                 System.out.println("Координаты не читаются.");
@@ -266,8 +259,7 @@ public class Parser {
         if (matcherB.find()) {
             String date = matcherB.group().replace("<", "").replace(">", "");
             Date data = new Date(Long.parseLong(date));
-            Collection.getHuman().setCreationDate(data);
-            System.out.println(humanQue.toArray().toString());
+            collection.getHuman().setCreationDate(data);
             checklist.put("creationdate", true);
         }
     }
@@ -276,10 +268,10 @@ public class Parser {
         if (matcherB.find()) {
             String hero = matcherB.group().replace("<", "").replace(">", "");
             if (hero.equals("true")) {
-                Collection.getHuman().setRealHero(true);
+                collection.getHuman().setRealHero(true);
                 checklist.put("realhero", true);
             } else if (hero.equals("false")) {
-                Collection.getHuman().setRealHero(false);
+                collection.getHuman().setRealHero(false);
                 checklist.put("realhero", true);
             }
         }
@@ -289,10 +281,10 @@ public class Parser {
         if (matcherB.find()) {
             String toothPick = matcherB.group().replace("<", "").replace(">", "");
             if (toothPick.equals("true")) {
-                Collection.getHuman().setHasToothPick(true);
+                collection.getHuman().setHasToothPick(true);
                 checklist.put("hastoothpick", true);
             } else if (toothPick.equals("false")) {
-                Collection.getHuman().setHasToothPick(false);
+                collection.getHuman().setHasToothPick(false);
                 checklist.put("hastoothpick", true);
             }
         }
@@ -303,9 +295,9 @@ public class Parser {
             String speed = matcherB.group().replace("<", "").replace(">", "");
             if (!speed.equals("")) {
                 Long impactSpeed = Long.parseLong(speed);
-                Collection.getHuman().setImpactSpeed(impactSpeed);
+                collection.getHuman().setImpactSpeed(impactSpeed);
             } else {
-                Collection.getHuman().setImpactSpeed(null);
+                collection.getHuman().setImpactSpeed(null);
             }
             checklist.put("impactspeed", true);
         }
@@ -316,19 +308,19 @@ public class Parser {
             String type = matcherB.group().replace("<", "").replace(">", "");
             switch (type) {
                 case "AXE":
-                    Collection.getHuman().setWeaponType(WeaponType.AXE);
+                    collection.getHuman().setWeaponType(WeaponType.AXE);
                     checklist.put("weapontype", true);
                     break;
                 case "PISTOL":
-                    Collection.getHuman().setWeaponType(WeaponType.PISTOL);
+                    collection.getHuman().setWeaponType(WeaponType.PISTOL);
                     checklist.put("weapontype", true);
                     break;
                 case "SHOTGUN":
-                    Collection.getHuman().setWeaponType(WeaponType.SHOTGUN);
+                    collection.getHuman().setWeaponType(WeaponType.SHOTGUN);
                     checklist.put("weapontype", true);
                     break;
                 case "RIFLE":
-                    Collection.getHuman().setWeaponType(WeaponType.RIFLE);
+                    collection.getHuman().setWeaponType(WeaponType.RIFLE);
                     checklist.put("weapontype", true);
                     break;
             }
@@ -340,23 +332,23 @@ public class Parser {
             String mood = matcherB.group().replace("<", "").replace(">", "");
             switch (mood) {
                 case "SADNESS":
-                    Collection.getHuman().setMood(Mood.SADNESS);
+                    collection.getHuman().setMood(Mood.SADNESS);
                     checklist.put("mood", true);
                     break;
                 case "GLOOM":
-                    Collection.getHuman().setMood(Mood.GLOOM);
+                    collection.getHuman().setMood(Mood.GLOOM);
                     checklist.put("mood", true);
                     break;
                 case "APATHY":
-                    Collection.getHuman().setMood(Mood.APATHY);
+                    collection.getHuman().setMood(Mood.APATHY);
                     checklist.put("mood", true);
                     break;
                 case "CALM":
-                    Collection.getHuman().setMood(Mood.CALM);
+                    collection.getHuman().setMood(Mood.CALM);
                     checklist.put("mood", true);
                     break;
                 case "RAGE":
-                    Collection.getHuman().setMood(Mood.RAGE);
+                    collection.getHuman().setMood(Mood.RAGE);
                     checklist.put("mood", true);
                     break;
             }
@@ -367,10 +359,10 @@ public class Parser {
         if (matcherB.find()) {
             String cool = matcherB.group().replace("<", "").replace(">", "");
             if (cool.equals("true")) {
-                Collection.getHuman().setCarCool(true);
+                collection.getHuman().setCarCool(true);
                 checklist.put("carcool", true);
             } else if (cool.equals("false")) {
-                Collection.getHuman().setCarCool(false);
+                collection.getHuman().setCarCool(false);
                 checklist.put("carcool", true);
             }
 

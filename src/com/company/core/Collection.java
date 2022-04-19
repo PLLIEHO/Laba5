@@ -11,14 +11,14 @@ import java.util.Deque;
  * Класс отвечает за управление и хранение коллекции
  */
 public class Collection {
-    static Deque<HumanBeing> humanQue = new ArrayDeque<>();
-    static Date data = new Date();
+    Deque<HumanBeing> humanQue = new ArrayDeque<>();
+    Date data = new Date();
 
     /**
      *
      * @param human новый объект класса HumanBeing
      */
-    public static void addHuman(HumanBeing human){
+    public void addHuman(HumanBeing human){
         humanQue.add(human);
     }
 
@@ -26,20 +26,23 @@ public class Collection {
      *
      * @return возвращает последний в очереди объект коллекции
      */
-    public static HumanBeing getHuman(){
+    public HumanBeing getHuman(){
         return humanQue.getLast();
     }
 
+    public Deque<HumanBeing> getCollection(){
+        return humanQue;
+    }
     /**
      *
      * @return возвращает дату инициализации коллекции
      */
-    public static Date getData(){return data;}
+    public Date getData(){return data;}
 
     /**
      * Пишет в консоль первый попавшийся объект, у которого поле RealHero = true.
      */
-    public static void maxByRealHero(){
+    public void maxByRealHero(){
         for(HumanBeing humanBeing : humanQue){
             if(humanBeing.getRealHero()) {
                 System.out.println(humanBeing.toString());
@@ -49,13 +52,13 @@ public class Collection {
     }
 
     /**
-     *
+     * Ищет все объекты коллекции, поле Name которых содержит данную подстроку
      * @param value Подстрока, которая должна содержаться в имени
      */
-    public static void searchName(String value){
+    public void searchName(String value){
         for(HumanBeing humanBeing : humanQue){
             if(humanBeing.getName().contains(value)){
-                System.out.println(humanBeing.toString());
+                System.out.println(humanBeing);
             }
         }
     }
@@ -63,9 +66,8 @@ public class Collection {
     /**
      * Производит сортировку
      */
-    public static void descendingSort(){
-        ArrayList<HumanBeing> sortList = new ArrayList<>();
-        sortList.addAll(humanQue);
+    public void descendingSort(){
+        ArrayList<HumanBeing> sortList = new ArrayList<>(humanQue);
         if(sortList.size()>0) {
             for (int i = 0; i < sortList.size(); i++) {
                 System.out.println(sortList.get(sortList.size() - 1 - i));
