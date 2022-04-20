@@ -119,7 +119,7 @@ public class AddCore {
                 isRealHero();
             }
         }
-        return (isRealHero());
+        return (false);
     }
 
     public float addCoordsX() {
@@ -138,7 +138,7 @@ public class AddCore {
             System.out.println("Введены неправильные данные. Повторите ввод.");
             addCoordsX();
         }
-        return (addCoordsX());
+        return (0);
     }
 
     public double addCoordsY() {
@@ -151,7 +151,7 @@ public class AddCore {
             System.out.println("Введены неправильные данные. Повторите ввод.");
             addCoordsY();
         }
-        return (addCoordsY());
+        return (0);
     }
 
     public Boolean hasToothPick() throws IOException {
@@ -170,7 +170,7 @@ public class AddCore {
                     break;
             }
         }
-        return (hasToothPick());
+        return (null);
     }
 
     public Long impactSpeed() {
@@ -192,7 +192,7 @@ public class AddCore {
             }
             return (100000000000L);
         } else {
-            return (impactSpeed());
+            return (null);
         }
     }
 
