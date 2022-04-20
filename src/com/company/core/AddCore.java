@@ -53,6 +53,7 @@ public class AddCore {
         human.setCarName(addName());
         System.out.println("Машина крутая? (да/нет)");
         human.setCarCool(isRealHero());
+        System.out.println("Процесс добавления объекта успешно завершён.");
         addIfMaxFlag = false;
         collection.getCollection().add(human);
     }
@@ -63,9 +64,9 @@ public class AddCore {
             return (name);
         } else {
             System.out.println("Имя не должно быть пустым. Повторите ввод.");
-            this.addName();
-            return(null);
+            addName();
         }
+        return(addName());
     }
 
     public Mood mood() {
@@ -83,8 +84,8 @@ public class AddCore {
                 return (Mood.RAGE);
             default:
                 System.out.println("Данные не распознаны. Повторите ввод.");
-                mood();
-                return (null);
+
+                return (mood());
         }
     }
 
@@ -101,8 +102,8 @@ public class AddCore {
                 return (WeaponType.RIFLE);
             default:
                 System.out.println("Данные не распознаны. Повторите ввод.");
-                weaponType();
-                return (null);
+
+                return (weaponType());
         }
     }
 
@@ -118,7 +119,7 @@ public class AddCore {
                 isRealHero();
             }
         }
-        return (false);
+        return (isRealHero());
     }
 
     public float addCoordsX() {
@@ -137,7 +138,7 @@ public class AddCore {
             System.out.println("Введены неправильные данные. Повторите ввод.");
             addCoordsX();
         }
-        return (0);
+        return (addCoordsX());
     }
 
     public double addCoordsY() {
@@ -150,7 +151,7 @@ public class AddCore {
             System.out.println("Введены неправильные данные. Повторите ввод.");
             addCoordsY();
         }
-        return (0);
+        return (addCoordsY());
     }
 
     public Boolean hasToothPick() throws IOException {
@@ -169,7 +170,7 @@ public class AddCore {
                     break;
             }
         }
-        return (false);
+        return (hasToothPick());
     }
 
     public Long impactSpeed() {
@@ -191,7 +192,7 @@ public class AddCore {
             }
             return (100000000000L);
         } else {
-            return (null);
+            return (impactSpeed());
         }
     }
 

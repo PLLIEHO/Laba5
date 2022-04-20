@@ -171,8 +171,7 @@ public class Core {
         }
         else if(values[0].equals(CommandList.REMOVE_GREATER)){
             if(values.length>2) {
-                RemoveGreater removeGreater = new RemoveGreater(this, values[2], values[1], collection);
-                removeGreater.splitter();
+                this.remove_greater(values[1], values[2]);
                 script();
             } else {
                 System.out.println("Вы не ввели аргумент.");
@@ -224,6 +223,10 @@ public class Core {
             script();
         }
     }
+    private void remove_greater(String values1, String values2) throws IOException {
+        RemoveGreater removeGreater = new RemoveGreater(this, values2, values1, collection);
+        removeGreater.splitter();
+    }
     private void execute(String values) throws IOException {
         File file = new File(values);
         try {
@@ -236,6 +239,7 @@ public class Core {
                 }
                 history("execute_script");
                 script();
+
         } catch (FileNotFoundException e) {
             if(!file.exists()){
             System.out.println("Имя файла введено неверно. Пожалуйста, повторите ввод.");
